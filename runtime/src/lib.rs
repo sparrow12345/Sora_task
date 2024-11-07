@@ -222,3 +222,26 @@ mod runtime {
 	#[runtime::pallet_index(7)]
 	pub type TemplateModule = pallet_template;
 }
+
+impl pallet_template::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+    type Currency = Balances;
+    type Randomness = RandomnessCollectiveFlip;
+    type WeightInfo = Weightss<Self>; // Use an appropriate weight struct or `()` for now if you don’t have custom weights
+}
+
+
+// Add the pallet to construct_runtime!
+construct_runtime!(
+    pub enum Runtime where
+        Block = Block,
+        NodeBlock = opaque::Block,
+        UncheckedExtrinsic = UncheckedExtrinsic
+    {
+        System: frame_system,
+        Balances: pallet_balances,
+        RandomnessCollectiveFlip: pallet_randomness_collective_flip,
+        MyPallet: my_pallet, // Register your custom pallet here
+        // Include any other pallets required by your runtime
+    }
+);

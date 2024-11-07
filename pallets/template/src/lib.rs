@@ -41,6 +41,8 @@
 
 // Re-export pallet items so that they can be accessed from the crate namespace.
 pub use pallet::*;
+pub mod weights;
+pub use weights::WeightInfo;
 
 // FRAME pallets require their own "mock runtimes" to be able to run unit tests. This module
 // contains a mock runtime specific for testing this pallet's functionality.
@@ -51,21 +53,22 @@ mod mock;
 // Learn about pallet unit testing here: https://docs.substrate.io/test/unit-testing/
 #[cfg(test)]
 mod tests;
+use frame_support::{dispatch::DispatchResult, pallet_prelude::*, traits::{Currency, ReservableCurrency, tokens::{ExistenceRequirement, WithdrawReasons}}};
+// use frame_system::{self as system};
+use pallet_balances::BalanceOf;
+use frame_support::traits::Randomness;
 
 // Every callable function or "dispatchable" a pallet exposes must have weight values that correctly
 // estimate a dispatchable's execution time. The benchmarking module is used to calculate weights
 // for each dispatchable and generates this pallet's weight.rs file. Learn more about benchmarking here: https://docs.substrate.io/test/benchmark/
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
-pub mod weights;
-pub use weights::*;
 
 // All pallet logic is defined in its own module and must be annotated by the `pallet` attribute.
 #[frame_support::pallet]
 pub mod pallet {
 	// Import various useful types required by all FRAME pallets.
 	use super::*;
-	use frame_support::pallet_prelude::*;
 	use frame_system::pallet_prelude::*;
 
 	// The `Pallet` struct serves as a placeholder to implement traits, methods and dispatchables
@@ -84,6 +87,8 @@ pub mod pallet {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 		/// A type representing the weights required by the dispatchables of this pallet.
 		type WeightInfo: WeightInfo;
+		type Currency: Currency<Self::AccountId> + ReservableCurrency<Self::AccountId>;
+		type Randomness: Randomness<Self::Hash, Self::BlockNumber>;
 	}
 
 	/// A storage item for this pallet.
@@ -197,6 +202,16 @@ pub mod pallet {
 					Ok(())
 				},
 			}
+		}
+
+		#[pallet::call_index(2)]
+		#[pallet::weight(10_000)]
+		pub fn buy_ticket(origin: OriginFor<T>, amount: u32) -> DispatchResult {
+			let buyer = ensure_signed(origin)?;
+			let ticket_cost = T::Currency::withdraw(&buyer, amount.into(), WithdrawReasons::TRANSFER, ExistenceRequirement::KeepAlive)?;
+			
+			// Store ticket details and emit event
+			Ok(())
 		}
 	}
 }
