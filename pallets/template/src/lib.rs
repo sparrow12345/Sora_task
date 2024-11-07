@@ -53,10 +53,17 @@ mod mock;
 // Learn about pallet unit testing here: https://docs.substrate.io/test/unit-testing/
 #[cfg(test)]
 mod tests;
+<<<<<<< HEAD
 use frame_support::{dispatch::DispatchResult, pallet_prelude::*, traits::{Currency, ReservableCurrency, tokens::{ExistenceRequirement, WithdrawReasons}}};
 // use frame_system::{self as system};
 use pallet_balances::BalanceOf;
 use frame_support::traits::Randomness;
+=======
+use frame_support::{dispatch::DispatchResult, pallet_prelude::*, traits::{Currency, ReservableCurrency}};
+//use frame_system::{self as system, pallet_prelude::*};
+use pallet_balances::BalanceOf;
+use pallet_randomness_collective_flip::Randomness;
+>>>>>>> f6bcebf5cfda9baaf367d39b4c1337937dfaa839
 
 // Every callable function or "dispatchable" a pallet exposes must have weight values that correctly
 // estimate a dispatchable's execution time. The benchmarking module is used to calculate weights
@@ -87,6 +94,10 @@ pub mod pallet {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 		/// A type representing the weights required by the dispatchables of this pallet.
 		type WeightInfo: WeightInfo;
+<<<<<<< HEAD
+=======
+
+>>>>>>> f6bcebf5cfda9baaf367d39b4c1337937dfaa839
 		type Currency: Currency<Self::AccountId> + ReservableCurrency<Self::AccountId>;
 		type Randomness: Randomness<Self::Hash, Self::BlockNumber>;
 	}
@@ -209,7 +220,10 @@ pub mod pallet {
 		pub fn buy_ticket(origin: OriginFor<T>, amount: u32) -> DispatchResult {
 			let buyer = ensure_signed(origin)?;
 			let ticket_cost = T::Currency::withdraw(&buyer, amount.into(), WithdrawReasons::TRANSFER, ExistenceRequirement::KeepAlive)?;
+<<<<<<< HEAD
 			
+=======
+>>>>>>> f6bcebf5cfda9baaf367d39b4c1337937dfaa839
 			// Store ticket details and emit event
 			Ok(())
 		}

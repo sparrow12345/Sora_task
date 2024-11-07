@@ -39,6 +39,10 @@ std = [
 	"frame-system/std",
 	"scale-info/std",
 	"pallet-balances/std",
+<<<<<<< HEAD
+=======
+    "pallet-randomness-collective-flip/std",
+>>>>>>> f6bcebf5cfda9baaf367d39b4c1337937dfaa839
 ]
 runtime-benchmarks = [
 	"frame-benchmarking/runtime-benchmarks",
